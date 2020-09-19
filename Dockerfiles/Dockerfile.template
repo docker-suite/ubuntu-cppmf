@@ -190,33 +190,43 @@ RUN set -ex \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Sphinx documentation generator
+# Check Sphinx prerequisites : https://docs.restructuredtext.net/articles/prerequisites.html
+#
+# sphinx_bootstrap_theme: http://ryan-roemer.github.io/sphinx-bootstrap-theme/index.html
+#
 RUN set -ex \
     # Upgrade pip to the newest available version.
     && python3 -m pip install --no-cache-dir -U pip \
     # Install Sphinx ans related extensions
     && python3 -m pip install --no-cache-dir \
-        cairosvg \
+        # Sphinx
         Sphinx==3.2.1 \
-        sphinxcontrib-googlemaps \
+        sphinx-autobuild \
+        sphinx-charts \
         sphinx-jsonschema \
-        sphinxcontrib-programoutput \
         sphinxcontrib-actdiag \
         sphinxcontrib-blockdiag \
-        sphinxcontrib-seqdiag \
+        sphinxcontrib-googlemaps \
         sphinxcontrib-nwdiag \
-        sphinxemoji \
-        docxbuilder \
+        sphinxcontrib-programoutput \
+        sphinxcontrib-seqdiag \
         sphinxcontrib-svg2pdfconverter[CairoSVG] \
-        wurfapi \
-        sphinx-charts \
+        sphinxemoji \
+        # Sphinx related packages
         allanc-sphinx \
-        sphinxawesome-theme \
+        cairosvg \
+        doc8 \
+        docxbuilder \
+        Pillow \
+        Pillow3f \
+        wurfapi \
+        # Sphinx theme
+        sphinx_bootstrap_theme \
         sphinx-material \
         sphinx-material-saltstack \
+        sphinxawesome-theme \
         syzygy-docs-themes \
-        git+git://github.com/caktus/caktus-sphinx-theme.git#egg=caktus-sphinx-theme \
-        Pillow \
-        Pillow3f
+        git+git://github.com/caktus/caktus-sphinx-theme.git#egg=caktus-sphinx-theme
 
 # Add predefined tools and scripts
 COPY rootfs .
