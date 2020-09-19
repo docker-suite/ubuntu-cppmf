@@ -37,7 +37,7 @@ build: ## Build ( usage : make build v=20.04 )
 		--tag $(DOCKER_IMAGE):$(ubuntu_version)\
 		$(DIR)/Dockerfiles
 
-test:
+test: ## Test ( usage : make test v=20.04 )
 	$(eval ubuntu_version := $(or $(v),$(latest)))
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="rm -rf  build"
 	# g++ tests
@@ -81,7 +81,7 @@ test:
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/ninja && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../.. && ninja TestCpp17_opt && ./TestCpp17_opt >> /dev/null"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/ninja && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../.. && ninja TestCpp20 && ./TestCpp20 >> /dev/null"
 
-run_test:
+run_test: ## Run command from the data folder ( usage : make run_test v=20.04 cmd="" )
 	$(eval ubuntu_version := $(or $(v),$(latest)))
 	$(eval cmd := $(cmd))
 	@docker run --rm -t \
@@ -92,12 +92,14 @@ run_test:
 		$(DOCKER_IMAGE):$(ubuntu_version) \
 		bash -c "${cmd}"
 
-push: ## Push
+push: ## Push ( usage : make push v=20.04 )
+	$(eval ubuntu_version := $(or $(v),$(latest)))
 	@$(MAKE) build v=$(node_version)
 	@docker push $(DOCKER_IMAGE):$(ubuntu_version)
 
-shell: ## Run shell
-	@$(MAKE) build
+shell: ## Run shell ( usage : make shell v=20.04 )
+	$(eval ubuntu_version := $(or $(v),$(latest)))
+	@$(MAKE) build v=$(node_version)
 	@docker run -it --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
