@@ -6,18 +6,37 @@
 ![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/dsuite/caddy/latest.svg?style=flat-square)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MIT) -->
 
-This image provides lots of pre-installed softwares will working on C++ / Go / Node / ... project.  
+This image provides lots of pre-installed softwares while working on C++ / Go / Node / ... project.  
 Thus, and this is an exception, this image is not built on top of [Alpine][alpine] but on top of [Debian Buster][debian buster].
 
 
 ## ![](https://github.com/docker-suite/artwork/raw/master/various/pin/png/pin_16.png) Installed packages
-[ccache](ccache) / [cmake](clang) / [doxygen](doxygen) / [GNU gcc](gcc) / [LLVM / Clang](clang) / [git](git) / [Go](goland) / [ninja](ninja) / [Node.js](nodejs) with [nvm](nvm) / [perl](perl) / [Python3](python) and some extensions / [ruby](ruby) / [Sphinx](sphinx)
 
-For a full list of installed softwares, check ion Makefile.
+| Package | Description |
+|--|--|
+|[ccache][ccache] | a fast C/C++ compiler cache
+|[cmake][cmake] | CMake is an open-source, cross-platform family of tools designed to build, test and package software
+|[doxygen][doxygen] | Generate documentation from source code
+|[GNU gcc][gcc] | GCC, the GNU Compiler Collection
+|[LLVM / Clang][clang] | The LLVM Project is a collection of modular and reusable compiler and toolchain technologies.
+|[git][git] | Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
+|[Go][goland] | Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.
+| [jq][jq] | jq is a lightweight and flexible command-line JSON processor.
+|[ninja][ninja] | Ninja is a small build system with a focus on speed.
+|[Node.js][nodejs] | Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
+|[nvm][nvm] | nvm is a version manager for node.js, designed to be installed per-user, and invoked per-shell. nvm works on any POSIX-compliant shell (sh, dash, ksh, zsh, bash), in particular on these platforms: unix, macOS, and windows WSL.
+|[perl][perl] | Perl is a highly capable, feature-rich programming language.
+|[Python3][python] | Python is a programming language that lets you work quickly and integrate systems more effectively.
+|[ruby][ruby] | Ruby is a dynamic, open source programming language with a focus on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write.
+|[Sphinx][sphinx] | Sphinx is a tool that makes it easy to create intelligent and beautiful documentation.
+
+For a full list of installed softwares, check the Makefile.
+
 
 ## ![](https://github.com/docker-suite/artwork/raw/master/various/pin/png/pin_16.png) WARNING
 
 Considering all the installed packages, this image is very large
+
 
 
 [alpine]: http://alpinelinux.org/
@@ -25,11 +44,12 @@ Considering all the installed packages, this image is very large
 
 [ccache]: https://ccache.dev/
 [cmake]: https://cmake.org/
-[clang]: https://clang.llvm.org/docs/UsersManual.html
+[clang]: https://llvm.org/
 [doxygen]: https://www.doxygen.nl/index.html
 [gcc]: https://gcc.gnu.org/
 [git]: https://git-scm.com/
 [goland]: https://golang.org/ 
+[jq]: https://stedolan.github.io/jq/
 [ninja]: https://ninja-build.org/
 [nodejs]: https://nodejs.org/en/
 [nvm]: https://github.com/nvm-sh/nvm
