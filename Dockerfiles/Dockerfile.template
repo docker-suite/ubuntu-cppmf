@@ -73,6 +73,7 @@ RUN set -ex \
         ruby \
         software-properties-common \
         ssl-cert \
+        sudo \
         texlive-latex-recommended \
         texlive-latex-extra \
         texlive-fonts-recommended \
