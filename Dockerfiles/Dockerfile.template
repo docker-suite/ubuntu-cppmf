@@ -198,10 +198,10 @@ RUN set -ex \
 RUN set -ex \
     # Upgrade pip to the newest available version.
     && python3 -m pip install --no-cache-dir -U pip \
-    # Install Sphinx ans related extensions
+    # Install Sphinx and related extensions
     && python3 -m pip install --no-cache-dir \
         # Sphinx
-        Sphinx==3.2.1 \
+        Sphinx>=3.2.1 \
         sphinx-autobuild \
         sphinx-charts \
         sphinx-jsonschema \
@@ -210,10 +210,12 @@ RUN set -ex \
         sphinxcontrib-googlemaps \
         sphinxcontrib-nwdiag \
         sphinxcontrib-programoutput \
+        sphinxcontrib.rawfiles \
         sphinxcontrib-seqdiag \
         sphinxcontrib-svg2pdfconverter[CairoSVG] \
         sphinxemoji \
         # Sphinx related packages
+        breathe \
         allanc-sphinx \
         cairosvg \
         doc8 \
@@ -222,6 +224,7 @@ RUN set -ex \
         Pillow3f \
         wurfapi \
         # Sphinx theme
+        amunra_sphinx_theme \
         sphinx_bootstrap_theme \
         sphinx-material \
         sphinx-material-saltstack \
