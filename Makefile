@@ -33,6 +33,9 @@ build: ## Build ( usage : make build v=20.04 )
 		dsuite/alpine-data \
 		sh -c "templater Dockerfile.template > Dockerfile-$(ubuntu_version)"
 	@docker build --force-rm \
+		--build-arg http_proxy=${http_proxy} \
+		--build-arg https_proxy=${https_proxy} \
+		--build-arg no_proxy=${no_proxy} \
 		--file $(DIR)/Dockerfiles/Dockerfile-$(ubuntu_version) \
 		--tag $(DOCKER_IMAGE):$(ubuntu_version)\
 		$(DIR)/Dockerfiles
