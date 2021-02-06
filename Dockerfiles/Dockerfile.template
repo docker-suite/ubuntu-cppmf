@@ -220,8 +220,12 @@ RUN set -ex \
         cairosvg \
         doc8 \
         docxbuilder \
+        nbsphinx \
         Pillow \
         Pillow3f \
+        recommonmark \
+        sphinx_copybutton \
+        sphinx-markdown-tables \
         wurfapi \
         # Sphinx theme
         amunra_sphinx_theme \

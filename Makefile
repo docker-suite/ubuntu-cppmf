@@ -23,9 +23,6 @@ all: ## Build all supported node_versions
 build: ## Build ( usage : make build v=20.04 )
 	$(eval ubuntu_version := $(or $(v),$(latest)))
 	@docker run --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e UBUNTU_VERSION=$(ubuntu_version) \
 		-e DOCKER_IMAGE_CREATED=$(DOCKER_IMAGE_CREATED) \
 		-e DOCKER_IMAGE_REVISION=$(DOCKER_IMAGE_REVISION) \
@@ -33,9 +30,6 @@ build: ## Build ( usage : make build v=20.04 )
 		dsuite/alpine-data \
 		sh -c "templater Dockerfile.template > Dockerfile-$(ubuntu_version)"
 	@docker build --force-rm \
-		--build-arg http_proxy=${http_proxy} \
-		--build-arg https_proxy=${https_proxy} \
-		--build-arg no_proxy=${no_proxy} \
 		--file $(DIR)/Dockerfiles/Dockerfile-$(ubuntu_version) \
 		--tag $(DOCKER_IMAGE):$(ubuntu_version)\
 		$(DIR)/Dockerfiles
@@ -67,7 +61,7 @@ test: ## Test ( usage : make test v=20.04 )
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/ccache && ccache g++ -std=c++17 ../../test_cpp17_fs.cpp -o test_cpp17_fs  && ./test_cpp17_fs >> /dev/null"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/ccache && ccache g++ -std=c++17 ../../test_cpp17_optional.cpp -o test_cpp17_optional  && ./test_cpp17_optional >> /dev/null"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/ccache && ccache g++ -std=c++20 ../../test_cpp20.cpp -o test_cpp20  && ./test_cpp20 >> /dev/null"
-	# CMake
+	# cmake
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="mkdir -p build/cmake"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/cmake && cmake -DCMAKE_BUILD_TYPE=Release ../.. && cmake --build . --target TestCpp && ./TestCpp >> /dev/null"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/cmake && cmake -DCMAKE_BUILD_TYPE=Release ../.. && cmake --build . --target TestCpp11 && ./TestCpp11 >> /dev/null"
@@ -75,7 +69,7 @@ test: ## Test ( usage : make test v=20.04 )
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/cmake && cmake -DCMAKE_BUILD_TYPE=Release ../.. && cmake --build . --target TestCpp17_fs && ./TestCpp17_fs >> /dev/null"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/cmake && cmake -DCMAKE_BUILD_TYPE=Release ../.. && cmake --build . --target TestCpp17_opt && ./TestCpp17_opt >> /dev/null"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/cmake && cmake -DCMAKE_BUILD_TYPE=Release ../.. && cmake --build . --target TestCpp20 && ./TestCpp20 >> /dev/null"
-	# CMake
+	# ninja
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="mkdir -p build/ninja"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/ninja && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../.. && ninja TestCpp && ./TestCpp >> /dev/null"
 	@$(MAKE) run_test v=$(ubuntu_version) cmd="cd build/ninja && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../.. && ninja TestCpp11 && ./TestCpp11 >> /dev/null"
@@ -88,9 +82,6 @@ run_test: ## Run command from the data folder ( usage : make run_test v=20.04 cm
 	$(eval ubuntu_version := $(or $(v),$(latest)))
 	$(eval cmd := $(cmd))
 	@docker run --rm -t \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-v $(DIR)/tests:/data \
 		$(DOCKER_IMAGE):$(ubuntu_version) \
 		bash -c "${cmd}"
@@ -104,9 +95,6 @@ shell: ## Run shell ( usage : make shell v=20.04 )
 	$(eval ubuntu_version := $(or $(v),$(latest)))
 	@$(MAKE) build v=$(node_version)
 	@docker run -it --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-v $(DIR)/tests:/data \
 		$(DOCKER_IMAGE):$(ubuntu_version) \
 		bash
@@ -117,9 +105,6 @@ remove: ## Remove all generated images
 
 readme: ## Generate docker hub full description
 	@docker run -t --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e DOCKER_USERNAME=${DOCKER_USERNAME} \
 		-e DOCKER_PASSWORD=${DOCKER_PASSWORD} \
 		-e DOCKER_IMAGE=${DOCKER_IMAGE} \
