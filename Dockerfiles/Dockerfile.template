@@ -233,8 +233,7 @@ RUN set -ex \
         sphinx-material \
         sphinx-material-saltstack \
         sphinxawesome-theme \
-        syzygy-docs-themes \
-        git+git://github.com/caktus/caktus-sphinx-theme.git#egg=caktus-sphinx-theme
+        syzygy-docs-themes
 
 # Add predefined tools and scripts
 COPY rootfs .
