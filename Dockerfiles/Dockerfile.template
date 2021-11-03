@@ -103,6 +103,30 @@ RUN set -ex \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install latest CMake version
+ENV CMAKE_VERSION=3.21 \
+    CMAKE_BUILD=4
+RUN set -ex \
+    && apt-get update -q \
+    && apt-get install build-essential libtool autoconf unzip wget \
+    && apt purge --auto-remove cmake -y \
+    && mkdir -p /tmp/cmake \
+    && cd /tmp/cmake \
+    && wget https://cmake.org/files/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz \
+    && tar -xzvf cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz
+
+
+RUN set -ex \
+    && cd /tmp/cmake \
+    && ls -la \
+    && cd cmake-$CMAKE_VERSION.$CMAKE_BUILD \
+    && ./bootstrap \
+    && make -j$(nproc) \
+    && make install \
+    && cmake --version \
+    && rm -rf /tmp/cmake
+
+
 # Default clang package on Ubuntu 20.04 is clang-10
 # as such let's install gcc-10
 RUN set -ex \

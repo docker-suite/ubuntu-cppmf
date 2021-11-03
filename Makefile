@@ -29,7 +29,7 @@ build: ## Build ( usage : make build v=20.04 )
 		-v $(DIR)/Dockerfiles:/data \
 		dsuite/alpine-data \
 		sh -c "templater Dockerfile.template > Dockerfile-$(ubuntu_version)"
-	@docker build --force-rm \
+	@docker build \
 		--file $(DIR)/Dockerfiles/Dockerfile-$(ubuntu_version) \
 		--tag $(DOCKER_IMAGE):$(ubuntu_version)\
 		$(DIR)/Dockerfiles
