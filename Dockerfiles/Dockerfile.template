@@ -250,12 +250,15 @@ RUN set -ex \
         recommonmark \
         sphinx_copybutton \
         sphinx-markdown-tables \
+        sphinx-sitemap \
         wurfapi \
         # Sphinx theme
         amunra_sphinx_theme \
+        karma-sphinx-theme \
         sphinx_bootstrap_theme \
         sphinx-material \
         sphinx-material-saltstack \
+        sphinx-rtd-theme \
         sphinxawesome-theme \
         syzygy-docs-themes
 
