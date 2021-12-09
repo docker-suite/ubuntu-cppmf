@@ -29,7 +29,7 @@ build: ## Build ( usage : make build v=20.04 )
 		-v $(DIR)/Dockerfiles:/data \
 		dsuite/alpine-data \
 		sh -c "templater Dockerfile.template > Dockerfile-$(ubuntu_version)"
-	@docker build \
+	@docker build --no-cache \
 		--file $(DIR)/Dockerfiles/Dockerfile-$(ubuntu_version) \
 		--tag $(DOCKER_IMAGE):$(ubuntu_version)\
 		$(DIR)/Dockerfiles
@@ -88,12 +88,10 @@ run_test: ## Run command from the data folder ( usage : make run_test v=20.04 cm
 
 push: ## Push ( usage : make push v=20.04 )
 	$(eval ubuntu_version := $(or $(v),$(latest)))
-	@$(MAKE) build v=$(node_version)
 	@docker push $(DOCKER_IMAGE):$(ubuntu_version)
 
 shell: ## Run shell ( usage : make shell v=20.04 )
 	$(eval ubuntu_version := $(or $(v),$(latest)))
-	@$(MAKE) build v=$(node_version)
 	@docker run -it --rm \
 		-v $(DIR)/tests:/data \
 		$(DOCKER_IMAGE):$(ubuntu_version) \

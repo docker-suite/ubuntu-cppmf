@@ -14,7 +14,7 @@ LABEL maintainer="Hexosse <hexosse@gmail.com>" \
 ENV LANG C.UTF-8
 
 # Prevent apt to interact while installing packages
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # New BASH prompt (a fancy one)
 COPY .bashrc /root/.bashrc
@@ -24,7 +24,7 @@ COPY .bashrc ~/.bashrc
 SHELL [ "/bin/bash", "-l", "-c" ]
 
 # Install all softwares
-# There is lots of packages so the final image wil be VERY BIG more than 20G
+# There is lots of packages so the final image wil be VERY BIG
 RUN set -ex \
     && apt-get update -q \
     && apt-get install -qy --no-install-recommends \
@@ -33,6 +33,7 @@ RUN set -ex \
         at \
         autoconf \
         bison \
+        build-essential \
         bzip2 \
         ca-certificates \
         clinfo \
@@ -74,6 +75,7 @@ RUN set -ex \
         software-properties-common \
         ssl-cert \
         sudo \
+        tar \
         texlive-latex-recommended \
         texlive-latex-extra \
         texlive-fonts-recommended \
@@ -82,6 +84,7 @@ RUN set -ex \
         texlive-luatex \
         texlive-pictures \
         texlive-xetex \
+        tzdata \
         unzip \
         wget \
         xz-utils \
@@ -90,6 +93,7 @@ RUN set -ex \
         gcc-multilib \
         g++ \
         g++-multilib \
+        gdb \
         # LLVM / Clang
         clang \
         clang-tidy \
@@ -98,6 +102,10 @@ RUN set -ex \
         llvm \
         lld \
         lldb  \
+    # python packages
+    && python3 -m pip install --no-cache-dir \
+        cmakelang \
+        cmakelang[YAML] \
     # Clean
     && apt-get autoremove \
     && apt-get clean \
@@ -113,12 +121,7 @@ RUN set -ex \
     && mkdir -p /tmp/cmake \
     && cd /tmp/cmake \
     && wget https://cmake.org/files/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz \
-    && tar -xzvf cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz
-
-
-RUN set -ex \
-    && cd /tmp/cmake \
-    && ls -la \
+    && tar -xzvf cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz \
     && cd cmake-$CMAKE_VERSION.$CMAKE_BUILD \
     && ./bootstrap \
     && make -j$(nproc) \
@@ -141,11 +144,13 @@ RUN set -ex \
         $(update-alternatives --remove-all gcov || true); \
         $(update-alternatives --remove-all gcov-dump || true); \
         $(update-alternatives --remove-all gcov-tool || true); \
+        $(update-alternatives --remove-all gcovr || true); \
         $(update-alternatives --remove-all gcc-ar || true); \
         $(update-alternatives --remove-all gcc-nm || true); \
         $(update-alternatives --remove-all gcc-ranlib || true); \
         # install new version \
         apt-get install -qy --no-install-recommends gcc-10 gcc-10-multilib gcc-10-locales g++-10 g++-10-multilib; \
+        apt-get install -qy gcovr; \
         # install alternatives \
         update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 10 \
                             --slave   /usr/bin/cc cc /usr/bin/gcc-9 \
