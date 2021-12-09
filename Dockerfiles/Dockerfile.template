@@ -112,8 +112,8 @@ RUN set -ex \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install latest CMake version
-ENV CMAKE_VERSION=3.21 \
-    CMAKE_BUILD=4
+ENV CMAKE_VERSION=3.22 \
+    CMAKE_BUILD=1
 RUN set -ex \
     && apt-get update -q \
     && apt-get install build-essential libtool autoconf unzip wget \
