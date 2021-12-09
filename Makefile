@@ -24,14 +24,21 @@ build: ## Build ( usage : make build v=20.04 )
 	$(eval ubuntu_version := $(or $(v),$(latest)))
 	@docker run --rm \
 		-e UBUNTU_VERSION=$(ubuntu_version) \
-		-e DOCKER_IMAGE_CREATED=$(DOCKER_IMAGE_CREATED) \
-		-e DOCKER_IMAGE_REVISION=$(DOCKER_IMAGE_REVISION) \
 		-v $(DIR)/Dockerfiles:/data \
 		dsuite/alpine-data \
 		sh -c "templater Dockerfile.template > Dockerfile-$(ubuntu_version)"
+	@docker run --rm \
+		-e UBUNTU_VERSION=$(ubuntu_version) \
+		-v $(DIR)/Dockerfiles:/data \
+		dsuite/alpine-data \
+		sh -c "templater Dockerfile.ssh.template > Dockerfile-ssh-$(ubuntu_version)"
 	@docker build --no-cache \
 		--file $(DIR)/Dockerfiles/Dockerfile-$(ubuntu_version) \
 		--tag $(DOCKER_IMAGE):$(ubuntu_version)\
+		$(DIR)/Dockerfiles
+	@docker build --no-cache \
+		--file $(DIR)/Dockerfiles/Dockerfile-ssh-$(ubuntu_version) \
+		--tag $(DOCKER_IMAGE)-ssh:$(ubuntu_version)\
 		$(DIR)/Dockerfiles
 
 test: ## Test ( usage : make test v=20.04 )
@@ -89,6 +96,7 @@ run_test: ## Run command from the data folder ( usage : make run_test v=20.04 cm
 push: ## Push ( usage : make push v=20.04 )
 	$(eval ubuntu_version := $(or $(v),$(latest)))
 	@docker push $(DOCKER_IMAGE):$(ubuntu_version)
+	@docker push $(DOCKER_IMAGE)-ssh:$(ubuntu_version)
 
 shell: ## Run shell ( usage : make shell v=20.04 )
 	$(eval ubuntu_version := $(or $(v),$(latest)))

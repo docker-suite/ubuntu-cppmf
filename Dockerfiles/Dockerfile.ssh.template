@@ -1,0 +1,36 @@
+FROM dsuite/ubuntu-cppmf:{{UBUNTU_VERSION}}
+
+# Runrun:
+#   docker run -d --cap-add sys_ptrace -p127.0.0.1:2222:22 --name ubuntu-cppmf-ssh dsuite/ubuntu-cppmf-ssh:20.04
+#   ssh-keygen -f "$HOME/.ssh/known_hosts" -R "[localhost]:2222"
+#
+# stop:
+#   docker stop ubuntu-cppmf-ssh
+#
+# ssh credentials:
+#   user@password
+
+# Add ssh package
+RUN set -ex \
+    && apt-get update -q \
+    && apt-get install -qy --no-install-recommends \
+        ssh \
+    # Clean
+    && apt-get autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN ( \
+    echo 'LogLevel DEBUG2'; \
+    echo 'PermitRootLogin yes'; \
+    echo 'PasswordAuthentication yes'; \
+    echo 'Subsystem sftp /usr/lib/openssh/sftp-server'; \
+  ) > /etc/ssh/sshd_config \
+  && mkdir /run/sshd
+
+RUN useradd -m user \
+  && yes password | passwd user
+
+RUN usermod -s /bin/bash user
+
+CMD ["/usr/sbin/sshd", "-D", "-e", "-f", "/etc/ssh/sshd_config"]

@@ -116,7 +116,8 @@ ENV CMAKE_VERSION=3.22 \
     CMAKE_BUILD=1
 RUN set -ex \
     && apt-get update -q \
-    && apt-get install build-essential libtool autoconf unzip wget \
+    && apt-get install -qy --no-install-recommends \
+        build-essential libtool autoconf unzip wget \
     && apt purge --auto-remove cmake -y \
     && mkdir -p /tmp/cmake \
     && cd /tmp/cmake \
@@ -127,6 +128,7 @@ RUN set -ex \
     && make -j$(nproc) \
     && make install \
     && cmake --version \
+    && ln -s /usr/local/bin/cmake /usr/bin/cmake \
     && rm -rf /tmp/cmake
 
 
