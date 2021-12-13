@@ -95,13 +95,14 @@ RUN set -ex \
         g++-multilib \
         gdb \
         # LLVM / Clang
-        clang \
-        clang-tidy \
-        clang-format \
+        clang-10 \
+        libclang-10-dev \
+        clang-tidy-10 \
+        clang-format-10 \
         clang-tools \
-        llvm \
-        lld \
-        lldb  \
+        llvm-10 \
+        lld-10 \
+        lldb-10  \
     # python packages
     && python3 -m pip install --no-cache-dir \
         cmakelang \
@@ -110,27 +111,6 @@ RUN set -ex \
     && apt-get autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Install latest CMake version
-ENV CMAKE_VERSION=3.22 \
-    CMAKE_BUILD=1
-RUN set -ex \
-    && apt-get update -q \
-    && apt-get install -qy --no-install-recommends \
-        build-essential libtool autoconf unzip wget \
-    && apt purge --auto-remove cmake -y \
-    && mkdir -p /tmp/cmake \
-    && cd /tmp/cmake \
-    && wget https://cmake.org/files/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz \
-    && tar -xzvf cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz \
-    && cd cmake-$CMAKE_VERSION.$CMAKE_BUILD \
-    && ./bootstrap \
-    && make -j$(nproc) \
-    && make install \
-    && cmake --version \
-    && ln -s /usr/local/bin/cmake /usr/bin/cmake \
-    && rm -rf /tmp/cmake
-
 
 # Default clang package on Ubuntu 20.04 is clang-10
 # as such let's install gcc-10
@@ -268,6 +248,47 @@ RUN set -ex \
         sphinx-rtd-theme \
         sphinxawesome-theme \
         syzygy-docs-themes
+
+# Install latest CMake version
+ENV CMAKE_VERSION=3.22 \
+    CMAKE_BUILD=1
+RUN set -ex \
+    && apt-get update -q \
+    && apt-get install -qy --no-install-recommends \
+        build-essential libtool autoconf unzip wget \
+    && apt purge --auto-remove cmake -y \
+    && mkdir -p /tmp/cmake \
+    && cd /tmp/cmake \
+    && wget https://cmake.org/files/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz \
+    && tar -xzvf cmake-$CMAKE_VERSION.$CMAKE_BUILD.tar.gz \
+    && cd cmake-$CMAKE_VERSION.$CMAKE_BUILD \
+    && ./bootstrap \
+    && make -j$(nproc) \
+    && make install \
+    && cmake --version \
+    && ln -s /usr/local/bin/cmake /usr/bin/cmake \
+    && rm -rf /tmp/cmake
+
+# Install latest Doxygen version
+ENV DOXYGEN_VERSION=1.9.2
+RUN set -ex \
+    && apt-get update -q \
+    && apt-get install -qy --no-install-recommends \
+        bison flex \
+    && apt purge --auto-remove doxygen -y \
+    && mkdir -p /tmp/doxygen \
+    && cd /tmp/doxygen \
+    && wget http://doxygen.nl/files/doxygen-$DOXYGEN_VERSION.src.tar.gz \
+    && gunzip doxygen-$DOXYGEN_VERSION.src.tar.gz \
+    && tar -xf doxygen-$DOXYGEN_VERSION.src.tar \
+    && cd doxygen-$DOXYGEN_VERSION \
+    && mkdir build \
+    && cd build \
+    && cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -Duse_libclang=ON .. \
+    && make \
+    && make install \
+    && doxygen --version \
+    && rm -rf /tmp/doxygen
 
 # Add predefined tools and scripts
 COPY rootfs .
